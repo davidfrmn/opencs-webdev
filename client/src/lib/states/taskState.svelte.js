@@ -1,5 +1,19 @@
-let taskState = $state({
-    });
+import { browser } from '$app/environment';
+
+const KEY = "tasks";
+let initial_tasks = {};
+
+if (browser && localStorage.getItem(KEY) !== null) {
+    initial_tasks = JSON.parse(localStorage.getItem(KEY));
+}
+
+let taskState = $state(initial_tasks);
+
+const saveTasks = () => {
+    if (browser) {
+        localStorage.setItem(KEY, JSON.stringify(taskState));
+    }
+};
 
 const useTaskState = () => {
     return {
@@ -11,7 +25,20 @@ const useTaskState = () => {
                 taskState[todoId] = [];
             }
             const tasklist = taskState[todoId];
-            tasklist.push({ id: tasklist.length + 1, name: name });
+            const newId = tasklist.length > 0 ? Math.max(...tasklist.map(t => t.id)) + 1 : 1;
+            taskState[todoId].push({ id: newId, name: name });
+            saveTasks();
+        },
+        removeTask: (todoId, taskId) => {
+            const tasklist = taskState[todoId];
+            if (tasklist) {
+                taskState[todoId] = tasklist.filter((task) => task.id !== taskId);
+                saveTasks();
+            }
+        },
+        removeAllTasks: (todoId) => {
+            delete taskState[todoId];
+            saveTasks();
         },
     };
 };

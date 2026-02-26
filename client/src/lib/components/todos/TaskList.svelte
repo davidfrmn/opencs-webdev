@@ -1,13 +1,14 @@
 <script>
-    let { todoId } = $props();
     import { useTaskState } from '$lib/states/taskState.svelte.js';
-    const { tasks } = useTaskState();
+    let { todoId } = $props();
+    const taskState  = useTaskState();
 </script>
 
 <ul>
-{#each tasks[todoId] ?? [] as task }
+{#each taskState.tasks[todoId] as task }
     <li>
         <a href="/todos/{todoId}/tasks/{task.id}">{task.name}</a>
+        <button onclick={() => taskState.removeTask(todoId, task.id)}>Remove</button>
     </li>
 {/each}
 </ul>
