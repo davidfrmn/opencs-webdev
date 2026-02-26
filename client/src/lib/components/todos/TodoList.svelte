@@ -1,9 +1,6 @@
 <script>
-    let todos = $state([
-        { id: 1, name: 'First todo' },
-        { id: 2, name: 'Second todo' },
-        { id: 3, name: 'Third todo' }
-    ]);
+    import { useTodoState } from '$lib/states/todoState.svelte.js';
+    const { todos } = useTodoState();
 </script>
 
 <h1>Todos</h1>
